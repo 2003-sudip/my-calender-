@@ -90,6 +90,14 @@ svg.i{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stro
 .tick{width:34px;height:34px;border:0;background:transparent;border-radius:8px;display:grid;place-items:center;font-size:19px;flex:none}
 .empty{text-align:center;color:var(--muted);padding:26px 16px;border:1px dashed var(--border);border-radius:12px;margin-top:6px}
 
+/* month festival list */
+.monthlist{margin-top:14px;padding:16px 18px;background:var(--surface);border:1px solid var(--border);border-radius:14px}
+.monthlist h2{margin:0 0 6px;font-size:16px;font-weight:800}
+.mrow{display:flex;align-items:center;gap:10px;padding:9px 0;border-top:1px solid var(--border);cursor:pointer}
+.mrow:first-of-type{border-top:0}
+.mrow .md{width:46px;flex:none;font-weight:700;color:var(--muted);font-size:13px}
+.mrow .mt{flex:1;min-width:0;font-weight:600;overflow-wrap:anywhere}
+.ver{margin:18px 0 0;text-align:center;font-size:11px;color:var(--muted)}
 /* tasks + settings */
 .panel{padding:20px;display:none}
 .panel h2{margin:0 0 16px}
@@ -142,7 +150,7 @@ svg.i{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stro
 }
 
 /* ---------- phones & small tablets ---------- */
-@media (max-width:760px){
+@media (max-width:640px){
   body{font-size:15px}
   .sidebar{display:none}
   .main{padding:14px 12px calc(var(--tab-h) + env(safe-area-inset-bottom,0px) + 86px);padding-top:calc(14px + env(safe-area-inset-top,0px))}
@@ -242,6 +250,11 @@ svg.i{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stro
     <div id="agendaList"></div>
   </section>
 
+  <section class="monthlist" id="monthList">
+    <h2 id="monthListTitle">Festivals this month</h2>
+    <div id="monthListBody"></div>
+  </section>
+
   <section class="panel" id="tasks">
     <h2>All Tasks</h2>
     <div class="task-toolbar">
@@ -259,6 +272,7 @@ svg.i{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stro
     <div class="setting"><div><b>Accent color</b><small>Choose your theme color.</small></div><div class="swatches" id="swatches"></div></div>
     <div class="setting"><div><b>Custom color</b><small>Pick any accent color.</small></div><input type="color" id="customColor"></div>
   </section>
+<p class="ver">MyCalendar v2</p>
 </main>
 </div>
 
@@ -355,8 +369,16 @@ function render(){
   }
   $('grid').innerHTML=out.join('');
   renderAgenda();
+  renderMonthList();
 }
 
+function renderMonthList(){
+  const y=view.getFullYear(),m=view.getMonth(),pre=y+'-'+pad(m+1)+'-';
+  const list=festivals.filter(f=>f.date.startsWith(pre)).sort((a,b)=>a.date.localeCompare(b.date));
+  $('monthListTitle').textContent='Festivals in '+months[m]+' '+y;
+  $('monthListBody').innerHTML=list.length?list.map(f=>'<div class="mrow fest-'+f.kind+'" data-key="'+f.date+'"><span class="md">'+months[m].slice(0,3)+' '+Number(f.date.slice(8))+'</span><i class="pip"></i><span class="mt">'+esc(f.title)+'</span></div>').join(''):'<div class="empty">No festivals this month.</div>';
+}
+$('monthListBody').addEventListener('click',e=>{const r=e.target.closest('.mrow');if(r){select(r.dataset.key);$('calendar').scrollIntoView({behavior:'smooth',block:'start'})}});
 function renderAgenda(){
   const [y,m,d]=sel.split('-').map(Number);
   $('agendaTitle').textContent=new Date(y,m-1,d).toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long'});
@@ -389,7 +411,7 @@ $('addDayBtn').onclick=()=>openNew(sel);
 
 /* modal */
 function openModal(){$('modalBg').style.display='flex'}
-function openNew(date){editingId=null;$('modalHeading').textContent='Add event';$('titleInput').value='';$('dateInput').value=date||todayKey();$('timeInput').value='';$('catInput').value='pink';$('descInput').value='';$('deleteBtn').classList.add('hidden');openModal();if(window.innerWidth>760)setTimeout(()=>$('titleInput').focus(),30)}
+function openNew(date){editingId=null;$('modalHeading').textContent='Add event';$('titleInput').value='';$('dateInput').value=date||todayKey();$('timeInput').value='';$('catInput').value='pink';$('descInput').value='';$('deleteBtn').classList.add('hidden');openModal();if(window.innerWidth>640)setTimeout(()=>$('titleInput').focus(),30)}
 function openEdit(id){const e=events.find(x=>x.id===id);if(!e)return;editingId=id;$('modalHeading').textContent='Edit event';$('titleInput').value=e.title;$('dateInput').value=e.date;$('timeInput').value=e.time;$('catInput').value=e.cat;$('descInput').value=e.desc;$('deleteBtn').classList.remove('hidden');openModal()}
 function close(){editingId=null;$('modalBg').style.display='none'}
 function deleteEvent(id){const e=events.find(x=>x.id===id);if(!e)return;if(!confirm('Delete “'+e.title+'”?'))return;events=events.filter(x=>x.id!==id);save();close();render();renderTasks()}
@@ -455,6 +477,7 @@ function show(which){
   const cal=which==='calendar';
   $('calendar').style.display=cal?'block':'none';
   $('agenda').style.display=cal?'block':'none';
+  $('monthList').style.display=cal?'block':'none';
   $('legend').style.display=cal?'':'none';
   $('tasks').style.display=which==='tasks'?'block':'none';
   $('settings').style.display=which==='settings'?'block':'none';
