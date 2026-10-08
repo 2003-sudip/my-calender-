@@ -29,7 +29,7 @@ svg.i{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stro
 .fest-spring{--c:var(--spring)}.fest-religious{--c:var(--religious)}.fest-national{--c:var(--national)}
 .fest-bengali{--c:var(--bengali)}.fest-christian{--c:var(--christian)}.fest-islamic{--c:var(--islamic)}
 .blue{--c:var(--blue)}.green{--c:var(--green)}.orange{--c:var(--orange)}.pink{--c:var(--pink)}
-.chip,.badge,.tag{background:color-mix(in srgb,var(--c) 13%,var(--surface));color:color-mix(in srgb,var(--c) 85%,var(--text))}
+.chip,.badge,.tag{background:var(--hover);color:var(--c);background:color-mix(in srgb,var(--c) 13%,var(--surface));color:color-mix(in srgb,var(--c) 85%,var(--text))}
 .pip{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--c);flex:none}
 
 /* layout */
@@ -63,7 +63,7 @@ svg.i{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stro
 .calhead,.grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr))}
 .calhead{border-bottom:1px solid var(--border)}
 .calhead div{text-align:center;padding:10px 4px;color:var(--muted);font-size:12px;font-weight:700}
-.day{min-height:112px;padding:6px;border-right:1px solid var(--border);border-bottom:1px solid var(--border);cursor:pointer;min-width:0;contain:content}
+.day{min-height:112px;padding:6px;border-right:1px solid var(--border);border-bottom:1px solid var(--border);cursor:pointer;min-width:0}
 .day:nth-child(7n){border-right:0}
 .day:nth-child(n+36){border-bottom:0}
 .day.muted{background:var(--bg)}
@@ -71,7 +71,7 @@ svg.i{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stro
 .day.sel{box-shadow:inset 0 0 0 2px var(--accent)}
 .num{width:26px;height:26px;display:grid;place-items:center;border-radius:50%;font-size:13px;font-weight:700;color:var(--muted);margin-bottom:3px}
 .day.today .num{background:var(--accent);color:#fff}
-.chip{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;font-size:11px;line-height:1.25;padding:3px 6px;border-radius:5px;margin-top:3px;overflow:hidden;overflow-wrap:anywhere;font-weight:600}
+.chip{display:block;font-size:11px;line-height:1.25;padding:3px 6px;border-radius:5px;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600}
 .more{font-size:11px;color:var(--muted);font-weight:600;margin:3px 0 0 4px}
 .done{text-decoration:line-through;opacity:.55}
 .pips{display:none}
@@ -272,7 +272,7 @@ svg.i{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stro
     <div class="setting"><div><b>Accent color</b><small>Choose your theme color.</small></div><div class="swatches" id="swatches"></div></div>
     <div class="setting"><div><b>Custom color</b><small>Pick any accent color.</small></div><input type="color" id="customColor"></div>
   </section>
-<p class="ver">MyCalendar v2</p>
+<p class="ver">MyCalendar v3</p>
 </main>
 </div>
 
